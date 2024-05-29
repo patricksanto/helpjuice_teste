@@ -1,0 +1,9 @@
+<div class="border rounded-xl shadow p-4 m-4">
+    <h1 class="text-bold font-xl">Articles</h1>
+    <% @articles.each do |article| %>
+        <div class="border rounded-xl shadow p-4 m-4">
+            <h2><%= article.title %></h2>
+            <p><%= article.content %></p>
+        </div>
+    <% end %>
+</div>
