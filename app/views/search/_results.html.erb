@@ -1,0 +1,8 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <% articles.each do |article| %>
+    <div class="border rounded-xl shadow p-4 hover:shadow-lg hover:scale-[102%] transition duration-500">
+      <h2 class="font-bold text-slate-700 text-lg mb-4"><%= article.title %></h2>
+      <p class="text.md line-clamp-3"><%= article.content %></p>
+    </div>
+  <% end %>
+</div>
