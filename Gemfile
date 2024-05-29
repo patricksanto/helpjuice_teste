@@ -71,3 +71,5 @@ end
 
 # A gem to generate fake data
 gem "faker"
+
+gem "ransack", "~> 4.1"
