@@ -10,13 +10,27 @@ export default class extends Controller {
         this.updateResults(data.results)
       }
     })
+    this.debouncedSearch = this.debounce(this.search.bind(this), 300)
   }
 
   search() {
     const query = this.inputTarget.value
 
+    if (event && event.keyCode === 8) {
+      this.debouncedSearch()
+      return
+    }
+
     if (query.length > 2) {
       this.channel.perform("receive", { query: query})
+    }
+  }
+
+  debounce(func, wait) {
+    let timeout
+    return function(...args) {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => func.apply(this, args), wait)
     }
   }
 
