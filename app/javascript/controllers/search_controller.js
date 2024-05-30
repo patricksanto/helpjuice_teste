@@ -21,6 +21,11 @@ export default class extends Controller {
       return
     }
 
+    if (query.length === 0) {
+      this.channel.perform("receive", { query: "" })
+      return
+    }
+
     if (query.length > 2) {
       this.channel.perform("receive", { query: query})
     }
