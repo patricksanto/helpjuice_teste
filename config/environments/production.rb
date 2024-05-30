@@ -41,7 +41,8 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
-  # config.action_cable.url = "wss://example.com/cable"
+  config.action_cable.url = "https://helpjuicetest-db788be2514a.herokuapp.com"
+  config.action_cable.allowed_request_origins = [ "https://helpjuicetest-db788be2514a.herokuapp.com", /http:\/\/helpjuicetest-db788be2514a.herokuapp.*/ ]
   # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
