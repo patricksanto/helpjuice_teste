@@ -11,6 +11,7 @@ export default class extends Controller {
       }
     })
     this.debouncedSearch = this.debounce(this.search.bind(this), 300)
+    console.log("Search controller Connected!")
   }
 
   search() {
@@ -27,7 +28,7 @@ export default class extends Controller {
     }
 
     if (query.length > 2) {
-      this.channel.perform("receive", { query: query})
+      this.channel.perform("receive", { query: query })
     }
   }
 
