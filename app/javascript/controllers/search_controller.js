@@ -14,12 +14,9 @@ export default class extends Controller {
 
   search() {
     const query = this.inputTarget.value
-    const userIp = this.getUserIp()
 
-    if (query.length) {
-      fetch(`/search.json?q[title_or_content_cont]=${query}`)
-        .then(response => response.json())
-        .then(data => this.updateResults(data))
+    if (query.length > 2) {
+      this.channel.perform("receive", { query: query})
     }
   }
 
@@ -39,11 +36,5 @@ export default class extends Controller {
     `
 
     articlesCount.textContent = `${results.length} ${results.length === 1 ? "Article" : "Articles"}`
-  }
-
-  getUserIp() {
-    // Método para obter o IP do usuário, pode ser através de uma API externa ou outra abordagem
-    // Aqui um exemplo simplificado que retorna um IP fixo
-    return "127.0.0.1"
   }
 }
