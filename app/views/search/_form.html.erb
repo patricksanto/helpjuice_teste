@@ -2,6 +2,6 @@
   <%= text_field_tag :query, nil, 
                      placeholder: "searching...",
                      class: "rounded-full border border-transparent",
-                     data: { action: "input->search#debouncedSearch", target: "search.input" }
+                     data: { action: "input->search#debouncedSearch", search_target: "input" }
   %>
 <% end %>
