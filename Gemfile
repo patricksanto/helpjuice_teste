@@ -76,3 +76,5 @@ end
 gem "faker"
 
 gem "ransack", "~> 4.1"
+
+gem 'sidekiq'
