@@ -1,8 +1,6 @@
 class SearchChannel < ApplicationCable::Channel
   def subscribed
     stream_from "search_channel"
-    @last_query = nil
-    @last_search_time = nil
   end
 
   def receive(data)
@@ -10,16 +8,10 @@ class SearchChannel < ApplicationCable::Channel
     user_ip = self.user_ip
     current_time = Time.current
 
-    puts "_________________________________________________________________________________________"
-    puts "Last search: #{@last_query}"
-    puts "Current query: #{query}"
-    puts "_________________________________________________________________________________________"
+    last_search = Search.where(user_ip: user_ip).order(created_at: :desc).first
 
-    if @last_search.nil? || @last_search != query
-      @last_search = query
-      @last_search_time = current_time
-
-      SaveSearchJob.set(wait: 2.second).perform_later(query, user_ip, current_time)
+    if last_search.nil? || last_search.query != query
+      SaveSearchJob.set(wait: 2.second).perform_later(query, user_ip, current_time, last_search&.id) unless query.blank?
     end
 
     results = Article.ransack(title_or_content_cont: query).result

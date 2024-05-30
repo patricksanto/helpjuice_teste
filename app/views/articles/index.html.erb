@@ -1,20 +1,13 @@
-
-
-<%# <div class="border rounded-xl shadow p-4 m-4">
-    <h1 class="text-bold font-xl">Articles</h1>
-    <% @articles.each do |article| %>
-        <%# <div class="border rounded-xl shadow p-4 m-4"> %>
-            <%# <h2><%= article.title</h2>  %>
-            <%# <p><%= article.content</p>  %>
-        <%# </div> %>
-    <%# <% end %> 
-<%# </div> %> 
-
-<div class="border rounded-xl shadow p-4 m-4">
-  <h1 id="articles-count" class="text-bold text-xl font-bold">
-    <%= pluralize(@articles.count, "Article") %>
-  </h1>
-  <div id="search-results">
-    <%= render "search/results", articles: @articles %>
+<div class="border rounded-xl shadow p-4 m-4 w-full">
+  <div class="border-b-2 flex justify-end mb-2">
+    <%= link_to "Popular searches", searches_path, class: "self-end rounded-full bg-slate-400 mb-2 text-white text-sm px-4 py-2 hover:bg-slate-500 transition" %>
+  </div>
+  <div>
+    <h1 id="articles-count" class="text-bold text-xl font-bold mb-2">
+        <%= pluralize(@articles.count, "Article") %>
+    </h1>
+    <div id="search-results">
+        <%= render "search/results", articles: @articles %>
+    </div>
   </div>
 </div>
