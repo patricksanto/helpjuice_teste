@@ -1,5 +1,11 @@
 class SearchController < ApplicationController
   def index
+    if params[:q]
+      @articles = Article.ransack(params[:q]).result(distinct: true)
+    else
+      @articles = Article.all
+    end
+
     @searches = Search.group(:query).order('count_all DESC').count(:all)
   end
 

@@ -44,4 +44,37 @@ RSpec.describe SearchController, type: :controller do
       end
     end
   end
+
+  describe "GET #perform_search" do
+    before do
+      ActiveJob::Base.queue_adapter = :test
+    end
+
+    context "when searching with a query" do
+      it "enqueues the SaveSearchJob" do
+        query = "test query"
+        expect {
+          get :perform_search, params: { query: query }, format: :turbo_stream
+        }.to have_enqueued_job(SaveSearchJob)
+      end
+
+      it "normalizes the search query" do
+        query = "   Test Query   "
+        get :perform_search, params: { query: query }, format: :turbo_stream
+        perform_enqueued_jobs { SaveSearchJob.perform_later(query, request.remote_ip, Time.current) }
+        expect(Search.last.query).to eq("test query")
+      end
+
+      it "does not create a new entry for the same query within 4 seconds" do
+        query = "test query"
+        get :perform_search, params: { query: query }, format: :turbo_stream
+        perform_enqueued_jobs
+
+        expect {
+          get :perform_search, params: { query: query }, format: :turbo_stream
+          perform_enqueued_jobs
+        }.not_to change(Search, :count)
+      end
+    end
+  end
 end
