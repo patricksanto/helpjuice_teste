@@ -1,16 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
-import consumer from "../channels/consumer"
 
 export default class extends Controller {
   static targets = ["input"]
 
   connect() {
-    this.channel = consumer.subscriptions.create("SearchChannel", {
-      received: data => {
-        this.updateResults(data.results)
-      }
-    })
     this.debouncedSearch = this.debounce(this.search.bind(this), 300)
+    console.log("Search controller connected")
   }
 
   search() {
@@ -22,12 +17,44 @@ export default class extends Controller {
     }
 
     if (query.length === 0) {
-      this.channel.perform("receive", { query: "" })
+      this.clearResults()
       return
     }
 
     if (query.length > 2) {
-      this.channel.perform("receive", { query: query })
+      this.submitForm(query)
+    }
+  }
+
+  submitForm(query) {
+    const url = new URL(this.inputTarget.form.action)
+    url.searchParams.set(this.inputTarget.name, query)
+
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'text/vnd.turbo-stream.html',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      }
+    })
+    .then(response => response.text())
+    .then(html => {
+      const turboStreamElements = document.createElement('div')
+      turboStreamElements.innerHTML = html
+      turboStreamElements.querySelectorAll('turbo-stream').forEach(element => {
+        const target = document.getElementById(element.getAttribute('target'))
+        if (target) {
+          target.innerHTML = element.querySelector('template').innerHTML
+        }
+      })
+    })
+    .catch(error => console.error(error))
+  }
+
+  clearResults() {
+    const target = document.getElementById("searched_articles")
+    if (target) {
+      target.innerHTML = ""
     }
   }
 
@@ -37,23 +64,5 @@ export default class extends Controller {
       clearTimeout(timeout)
       timeout = setTimeout(() => func.apply(this, args), wait)
     }
-  }
-
-  updateResults(results) {
-    const resultsContainer = document.getElementById("search-results")
-    const articlesCount = document.getElementById("articles-count")
-
-    resultsContainer.innerHTML = `
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        ${results.map(result => `
-          <div class="border rounded-xl shadow p-4 hover:shadow-lg hover:scale-[102%] transition duration-500">
-            <h2 class="font-bold text-slate-700 text-lg mb-4">${result.title}</h2>
-            <p class="text.md line-clamp-3">${result.content}</p>
-          </div>
-        `).join('')}
-      </div>
-    `
-
-    articlesCount.textContent = `${results.length} ${results.length === 1 ? "Article" : "Articles"}`
   }
 }
