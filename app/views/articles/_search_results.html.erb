@@ -1,8 +1,8 @@
-<div id="articles" class="border rounded-xl shadow p-4 w-full">
-  <h1 id="articles-count" class="text-bold text-xl font-bold mb-2">
-    <%= pluralize(@articles.count, "Article found") %>
-  </h1>
+<div id="articles" class="border rounded-xl shadow p-4 mb-4 w-full">
   <% if articles.any? %>
+    <h1 id="articles-count" class="text-bold text-xl font-bold mb-2">
+      <%= pluralize(@articles.count, "Article") %> found
+    </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <% articles.each do |article| %>
         <div class="border rounded-xl shadow p-4 hover:shadow-lg hover:scale-[102%] transition duration-500">
