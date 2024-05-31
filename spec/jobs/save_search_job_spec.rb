@@ -20,10 +20,10 @@ RSpec.describe SaveSearchJob, type: :job do
     expect(Search.last.query).to eq("test query")
   end
 
-  it "does not create a new entry for the same query within 4 seconds" do
+  it "does not create a new entry for the same query within 10 seconds" do
     SaveSearchJob.perform_now(query, user_ip, time_of_request)
     expect {
-      SaveSearchJob.perform_now(query, user_ip, time_of_request + 3.seconds)
+      SaveSearchJob.perform_now(query, user_ip, time_of_request + 3.seconds, Search.last.id)
     }.not_to change(Search, :count)
   end
 

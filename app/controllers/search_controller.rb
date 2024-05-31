@@ -5,7 +5,6 @@ class SearchController < ApplicationController
     else
       @articles = Article.all
     end
-
     @searches = Search.group(:query).order('count_all DESC').count(:all)
   end
 
@@ -17,7 +16,7 @@ class SearchController < ApplicationController
     last_search = Search.where(user_ip: user_ip).order(created_at: :desc).first
 
     if last_search.nil? || last_search.query != query
-      SaveSearchJob.set(wait: 2.seconds).perform_later(query, user_ip, current_time, last_search&.id) unless query.blank?
+      SaveSearchJob.perform_later(query, user_ip, current_time, last_search&.id) unless query.blank?
     end
 
     @articles = Article.ransack(title_or_content_cont: query).result(distinct: true)

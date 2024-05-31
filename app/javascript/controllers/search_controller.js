@@ -5,7 +5,6 @@ export default class extends Controller {
 
   connect() {
     this.debouncedSearch = this.debounce(this.search.bind(this), 300)
-    console.log("Search controller connected")
   }
 
   search() {
